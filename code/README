@@ -1,0 +1,29 @@
+Installation instruction:
+
+1) Execute the following command from *current directory*:
+docker build . -t asz/python
+
+2) Add the following entries to you .bashrc file (in home directory), replace /path/to/dir/with/the/package/asc with path to the proper directory:
+
+apython(){
+  docker run -v $HOME:$HOME -v /path/to/dir/with/the/package/asc:/pckg/asc -w=$PWD --rm -it asz/python python "$@"
+}
+iapython() {
+  docker run -v $HOME:$HOME -v /path/to/dir/with/the/package/asc:/pckg/asc -w=$PWD --rm -it asz/python ipython
+}
+ajupyter() {
+  (sleep 3 && open "http://localhost:8888")&
+  docker run -v $HOME:$HOME -v /path/to/dir/with/the/package/asc:/pckg/asc -w=$PWD -p 8888:8888 --rm -it asz/python jupyter notebook --no-browser --ip="0.0.0.0" --notebook-dir=$PWD
+}
+
+3) Use the commands above to run python
+
+4) put word2vec in code/lib directory (explained in global level README)
+
+5) run (adjust paths accordingly):
+
+apython e2e1_read_and_process_data.py --data="/home/adrian/data/asc/data.pkl"
+apython e2e2_w2v_to_dict.py --data="/home/adrian/data/asc/data.pkl" --w2v="/lib/GoogleNews-vectors-negative300.bin" --dict="/home/adrian/data/asc/dict.bin"
+apython e2e3_create_experiment_config.py --exp_config="/home/adrian/data/asc/exp_config.json"
+apython e2e4_run_experiment.py --data="/home/adrian/data/asc/data.pkl" --dict="/home/adrian/data/asc/dict.bin" --exp_config="/home/adrian/data/asc/exp_config.json" --results="/home/adrian/data/asc/results.pkl"
+apython e2e5_experiment_summary.py --results_prefix="/home/adrian/data/asc/results.pkl" --summary="/home/adrian/data/asc/results.xlsx"
